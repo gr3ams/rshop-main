@@ -1,0 +1,262 @@
+﻿
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Zantiqa Font */
+@font-face {
+  font-family: 'Zantiqa';
+  src: url('/fonts/Zantiqa.woff2') format('woff2'),
+       url('/fonts/Zantiqa.woff') format('woff'),
+       url('/fonts/Zantiqa.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Zantiqa';
+  src: url('/fonts/Zantiqa-Bold.woff2') format('woff2'),
+       url('/fonts/Zantiqa-Bold.woff') format('woff'),
+       url('/fonts/Zantiqa-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 220 17% 97%;
+    --foreground: 220 13% 13%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 13% 13%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 13% 13%;
+
+    --primary: 262 83% 58%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220 13% 13%;
+
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+
+    --accent: 262 83% 95%;
+    --accent-foreground: 262 83% 25%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 262 83% 58%;
+
+    --radius: 1rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* Нейтральные серые тона, основанные на template-dark.jpg (RGB 65,66,65) */
+    /* Основной фон - темно-серый, похожий на template */
+    --background: 0 0% 12%;
+    --foreground: 0 0% 90%;
+
+    /* Карточки - чуть светлее фона */
+    --card: 0 0% 14%;
+    --card-foreground: 0 0% 90%;
+
+    /* Popover - как карточки */
+    --popover: 0 0% 14%;
+    --popover-foreground: 0 0% 90%;
+
+    /* Primary - сохраняем фиолетовый для акцентов */
+    --primary: 262 83% 58%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary - нейтральный темно-серый */
+    --secondary: 0 0% 18%;
+    --secondary-foreground: 0 0% 90%;
+
+    /* Muted - нейтральный темно-серый */
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 65%;
+
+    /* Accent - темный с фиолетовым оттенком */
+    --accent: 262 60% 20%;
+    --accent-foreground: 262 60% 90%;
+
+    /* Destructive - красный */
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 0% 90%;
+
+    /* Border и Input - нейтральные серые */
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 262 83% 58%;
+
+    /* Sidebar - нейтральные серые */
+    --sidebar-background: 0 0% 10%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 262 83% 58%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 16%;
+    --sidebar-accent-foreground: 0 0% 90%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 262 83% 58%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    font-family: 'Zantiqa', sans-serif;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    overflow-x: hidden;
+    max-width: 100vw;
+    box-sizing: border-box;
+    background-image: url('/template.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    position: relative;
+    font-family: 'Zantiqa', sans-serif;
+  }
+  
+  /* Для темной темы используем темную версию изображения */
+  .dark body {
+    background-image: url('/template-dark.jpg');
+  }
+  
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: hsl(var(--background));
+    opacity: 0.85;
+    z-index: -1;
+    pointer-events: none;
+  }
+  
+  /* Для темной темы - немного затемняем overlay */
+  .dark body::before {
+    background-color: hsl(var(--background));
+    opacity: 0.9;
+  }
+  
+  /* Стили для изображений товаров с template.jpg фоном */
+  .product-image-container {
+    position: relative;
+  }
+  
+  /* Template.jpg как абсолютно позиционированный фон - не влияет на высоту */
+  .product-image-container-bg {
+    background-image: url('/template.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 0;
+  }
+  
+  /* Для темной темы используем темную версию изображения */
+  .dark .product-image-container-bg {
+    background-image: url('/template-dark.jpg');
+  }
+  
+  /* Overlay для фона */
+  .product-image-container-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: hsl(var(--background));
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  
+  /* Для темной темы - немного увеличиваем overlay */
+  .dark .product-image-container-bg::before {
+    opacity: 0.7;
+  }
+  
+  .product-image-container img {
+    position: relative;
+    z-index: 1;
+    mix-blend-mode: multiply;
+  }
+  
+  /* Для темной темы - используем normal blend mode */
+  .dark .product-image-container img {
+    mix-blend-mode: normal;
+  }
+  
+  #root {
+    max-width: 100vw;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    position: relative;
+  }
+}
+
+/* Toast уведомления - правильное позиционирование */
+@layer utilities {
+  /* Для Sonner toast уведомлений */
+  [data-sonner-toaster] {
+    --width: 356px;
+    --toast-gap: 8px;
+  }
+
+  /* Позиционирование на уровне header (top: 0, z-index выше header) */
+  [data-sonner-toaster] {
+    top: 0 !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    right: auto !important;
+    z-index: 60 !important;
+    padding-top: 12px !important; /* Отступ для выравнивания с содержимым header (py-3) */
+  }
+
+  /* Улучшенные стили для toast */
+  [data-sonner-toast] {
+    @apply shadow-lg border;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    font-weight: 500;
+  }
+
+  /* Анимация появления на месте (fade + scale) вместо падения */
+  [data-sonner-toast][data-state="open"] {
+    animation: toast-appear 0.3s ease-out;
+  }
+
+  @keyframes toast-appear {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}

@@ -104,6 +104,10 @@ export const ProductModal = ({ product, onClose }: ProductModalProps) => {
                 : '4 / 3'
             }}
             onClick={() => setShowZoom(true)}
+            onDoubleClick={(e) => {
+              e.stopPropagation();
+              setShowZoom(true);
+            }}
           >
             {/* Skeleton placeholder пока изображение загружается */}
             {!imageLoaded && (
@@ -140,6 +144,11 @@ export const ProductModal = ({ product, onClose }: ProductModalProps) => {
             {product.description || 'Описание отсутствует'}
           </div>
 
+          <div className="text-xs text-muted-foreground mb-3 flex items-center gap-2">
+            <ZoomIn className="h-4 w-4" />
+            Двойное нажатие увеличивает фото
+          </div>
+
           <div className="flex flex-col gap-3">
             {cartItem ? (
               <>
@@ -147,6 +156,12 @@ export const ProductModal = ({ product, onClose }: ProductModalProps) => {
                   <button
                     className="bg-muted hover:bg-muted/80 w-10 h-10 flex items-center justify-center"
                     onClick={() => handleUpdateQuantity(cartItem.quantity - 1)}
+                    onPointerDown={(e) => {
+                      if (e.pointerType === 'touch') {
+                        e.preventDefault();
+                        handleUpdateQuantity(cartItem.quantity - 1);
+                      }
+                    }}
                   >
                     <Minus className="h-4 w-4" />
                   </button>
@@ -156,6 +171,12 @@ export const ProductModal = ({ product, onClose }: ProductModalProps) => {
                   <button
                     className="bg-muted hover:bg-muted/80 w-10 h-10 flex items-center justify-center"
                     onClick={() => handleUpdateQuantity(cartItem.quantity + 1)}
+                    onPointerDown={(e) => {
+                      if (e.pointerType === 'touch') {
+                        e.preventDefault();
+                        handleUpdateQuantity(cartItem.quantity + 1);
+                      }
+                    }}
                   >
                     <Plus className="h-4 w-4" />
                   </button>

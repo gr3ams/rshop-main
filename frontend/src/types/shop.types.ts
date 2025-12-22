@@ -67,6 +67,17 @@ export interface OrderItem {
   price: number;
 }
 
+export interface OrderCreate {
+  user_id: number;
+  user_name: string;
+  username?: string;
+  phone: string;
+  address: string;
+  comment?: string;
+  items: OrderItem[];
+  total: number;
+}
+
 export interface OrderDetail {
   id: number;
   order_id: string;

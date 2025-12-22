@@ -31,6 +31,9 @@ export const API_ENDPOINTS = {
   brands: (categoryId: number) => `/api/brands/${categoryId}`,
   products: (brandId: number) => `/api/products/${brandId}`,
   allProducts: '/api/products',
+  orders: {
+    create: '/api/orders/create',
+  },
   payment: {
     details: '/api/payment/details',
     confirm: '/api/payment/confirm',
@@ -52,6 +55,8 @@ export const TELEGRAM_CONFIG = {
   adminIds: [6326719341, 790410251, 6388614116, 8188457128, 859330334] as number[],
   supportUsername: 'support', // Замените на реальный username саппорта
 };
+
+export const STORE_LINK = 'https://rshop1.ru';
 
 // Изображения
 export const IMAGES = {

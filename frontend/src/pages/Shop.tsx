@@ -15,7 +15,10 @@ import { CheckoutForm } from '@/components/shop/CheckoutForm';
 import { ProfilePage } from '@/components/shop/ProfilePage';
 import { OrderHistoryPage } from '@/components/shop/OrderHistoryPage';
 import { useNavigate } from 'react-router-dom';
-import { IMAGES } from '@/config/app.config';
+import { STORE_LINK } from '@/config/app.config';
+import { CategoryDrawer } from '@/components/shop/CategoryDrawer';
+import { Button } from '@/components/ui/button';
+import { ExternalLink } from 'lucide-react';
 
 interface FilterState {
   categoryId: number | null;
@@ -239,9 +242,34 @@ export const Shop = () => {
     <div className="min-h-screen w-full">
       {/* Header */}
       <div className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
-        <div className="flex items-center justify-between px-4 py-3">
-          <h1 className="text-xl font-bold">{getPageTitle()}</h1>
+        <div className="flex items-center justify-between px-4 py-3 gap-3">
+          <div className="flex flex-col">
+            <span className="text-xs text-muted-foreground uppercase tracking-[0.08em]">R.ShopBot</span>
+            <h1 className="text-xl font-bold">{getPageTitle()}</h1>
+          </div>
           <div className="flex items-center gap-2">
+            <CategoryDrawer
+              categories={categories}
+              activeCategoryId={filters.categoryId}
+              onSelectCategory={(categoryId) =>
+                handleFilter({ ...filters, categoryId })
+              }
+            />
+            <Button
+              variant="outline"
+              size="icon"
+              className="rounded-full border-dashed active:scale-95 transition"
+              onClick={() => {
+                if (window.Telegram?.WebApp?.openLink) {
+                  window.Telegram.WebApp.openLink(STORE_LINK);
+                } else {
+                  window.open(STORE_LINK, '_blank');
+                }
+              }}
+              title="Открыть сайт"
+            >
+              <ExternalLink className="h-4 w-4" />
+            </Button>
             <ThemeToggle />
           </div>
         </div>

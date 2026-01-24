@@ -60,6 +60,10 @@ dist/
 dist-ssr/
 *.local
 
+# Frontend shared libs
+!frontend/src/lib/
+!frontend/src/lib/**
+
 # IDE
 .vscode/
 .idea/
@@ -71,4 +75,3 @@ dist-ssr/
 *.ntvs*
 *.njsproj
 *.sln
-

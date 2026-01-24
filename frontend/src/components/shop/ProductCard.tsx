@@ -28,9 +28,13 @@ export const ProductCard = ({
     <Card
       className="cursor-pointer transition-all hover:-translate-y-1 hover:shadow-lg overflow-hidden"
       onClick={onProductClick}
+      onDoubleClick={(e) => {
+        e.preventDefault();
+        onProductClick();
+      }}
     >
       <div 
-        className="relative w-full overflow-hidden product-image-container"
+        className="relative w-full overflow-hidden product-image-container active:scale-[0.99] transition"
         style={{ minHeight: '200px' }}
       >
         {/* Template.jpg как фон - не влияет на высоту */}
@@ -61,7 +65,7 @@ export const ProductCard = ({
           {cartItem ? (
             <div className="flex items-center border border-border rounded-full overflow-hidden">
               <button
-                className="bg-muted hover:bg-muted/80 w-8 h-8 flex items-center justify-center font-semibold"
+                className="bg-muted hover:bg-muted/80 active:scale-95 w-8 h-8 flex items-center justify-center font-semibold transition"
                 onClick={() => onUpdateQuantity(cartItem.quantity - 1)}
               >
                 <Minus className="h-4 w-4" />
@@ -70,7 +74,7 @@ export const ProductCard = ({
                 {cartItem.quantity}
               </span>
               <button
-                className="bg-muted hover:bg-muted/80 w-8 h-8 flex items-center justify-center font-semibold"
+                className="bg-muted hover:bg-muted/80 active:scale-95 w-8 h-8 flex items-center justify-center font-semibold transition"
                 onClick={() => onUpdateQuantity(cartItem.quantity + 1)}
               >
                 <Plus className="h-4 w-4" />
@@ -78,7 +82,7 @@ export const ProductCard = ({
             </div>
           ) : (
             <Button
-              className="w-full gap-2"
+              className="w-full gap-2 active:scale-[0.98] transition"
               size="sm"
               onClick={onAddToCart}
             >

@@ -111,8 +111,14 @@ export const CartPage = ({ onContinueShopping, onCheckout }: CartPageProps) => {
               <div className="flex flex-col items-end gap-2 flex-shrink-0">
                 <div className="flex items-center border border-border rounded-full overflow-hidden">
                   <button
-                    className="bg-muted hover:bg-muted/80 w-7 h-7 flex items-center justify-center font-semibold"
+                    className="bg-muted hover:bg-muted/80 active:scale-95 w-7 h-7 flex items-center justify-center font-semibold transition"
                     onClick={() => handleUpdateQuantity(item.id, item.name, item.quantity - 1)}
+                    onPointerDown={(e) => {
+                      if (e.pointerType === 'touch') {
+                        e.preventDefault();
+                        handleUpdateQuantity(item.id, item.name, item.quantity - 1);
+                      }
+                    }}
                   >
                     <Minus className="h-3 w-3" />
                   </button>
@@ -120,8 +126,14 @@ export const CartPage = ({ onContinueShopping, onCheckout }: CartPageProps) => {
                     {item.quantity}
                   </span>
                   <button
-                    className="bg-muted hover:bg-muted/80 w-7 h-7 flex items-center justify-center font-semibold"
+                    className="bg-muted hover:bg-muted/80 active:scale-95 w-7 h-7 flex items-center justify-center font-semibold transition"
                     onClick={() => handleUpdateQuantity(item.id, item.name, item.quantity + 1)}
+                    onPointerDown={(e) => {
+                      if (e.pointerType === 'touch') {
+                        e.preventDefault();
+                        handleUpdateQuantity(item.id, item.name, item.quantity + 1);
+                      }
+                    }}
                   >
                     <Plus className="h-3 w-3" />
                   </button>

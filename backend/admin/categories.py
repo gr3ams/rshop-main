@@ -322,6 +322,18 @@ async def find_category_to_delete(message: Message, state: FSMContext):
             category = result.scalar_one_or_none()
 
             if not category:
+                categories = await get_categories(session)
+
+                def normalize(value: str) -> str:
+                    return " ".join(value.replace("\u00a0", " ").split()).lower()
+
+                normalized_search = normalize(search_text)
+                category = next(
+                    (item for item in categories if normalize(item.name) == normalized_search),
+                    None,
+                )
+
+            if not category:
                 logger.warning(f"Категория не найдена для удаления: user_id={user_id}, search={search_text}")
                 await message.answer("❌ Категория не найдена. Проверьте название.")
                 await state.clear()

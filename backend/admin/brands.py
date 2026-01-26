@@ -84,7 +84,8 @@ async def view_brands(callback: CallbackQuery, state: FSMContext):
                 items_per_page=PAGINATION_BRANDS_PER_PAGE,
                 current_page=current_page,
                 menu_callback="brands_menu",
-                parse_mode="HTML"
+                parse_mode="HTML",
+                page_prefix="page_brands"
             )
             await state.update_data(brands_page=current_page)
             logger.info(f"Список брендов отображен: user_id={user_id}, total={len(brands)}, page={current_page}")
@@ -398,4 +399,3 @@ async def cancel_brand_delete(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer("❌ Удаление бренда отменено")
     await admin_panel(callback.message)
     await callback.answer()
-

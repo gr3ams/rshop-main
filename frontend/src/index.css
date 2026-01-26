@@ -170,44 +170,34 @@ All colors MUST be HSL.
     position: relative;
   }
   
-  /* Template.jpg как абсолютно позиционированный фон - не влияет на высоту */
+  /* Однородный фон карточки для обеих тем */
   .product-image-container-bg {
-    background-image: url('/template.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background-image: none;
+    background-color: hsl(var(--card));
     z-index: 0;
   }
   
-  /* Для темной темы используем темную версию изображения */
   .dark .product-image-container-bg {
-    background-image: url('/template-dark.jpg');
+    background-image: none;
+    background-color: hsl(var(--card));
   }
   
-  /* Overlay для фона */
   .product-image-container-bg::before {
     content: '';
     position: absolute;
     inset: 0;
-    background-color: hsl(var(--background));
-    opacity: 0.5;
+    background-color: hsl(var(--card));
+    opacity: 1;
     pointer-events: none;
   }
   
-  /* Для темной темы - немного увеличиваем overlay */
   .dark .product-image-container-bg::before {
-    opacity: 0.45;
+    opacity: 1;
   }
   
   .product-image-container img {
     position: relative;
     z-index: 1;
-    mix-blend-mode: multiply;
-  }
-  
-  /* Для темной темы - используем normal blend mode */
-  .dark .product-image-container img {
-    mix-blend-mode: normal;
   }
   
   #root {

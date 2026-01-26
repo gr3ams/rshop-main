@@ -196,7 +196,7 @@ All colors MUST be HSL.
   
   /* Для темной темы - немного увеличиваем overlay */
   .dark .product-image-container-bg::before {
-    opacity: 0.7;
+    opacity: 0.45;
   }
   
   .product-image-container img {

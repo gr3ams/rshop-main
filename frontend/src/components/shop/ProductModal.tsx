@@ -32,9 +32,18 @@ export const ProductModal = ({ product, onClose }: ProductModalProps) => {
   const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
 
-  const photoUrl = product.photo_url
-    ? `/static/${product.photo_url}`
-    : IMAGES.placeholder;
+  const resolvePhotoUrl = (photoUrl?: string) => {
+    if (!photoUrl) return IMAGES.placeholder;
+    if (photoUrl.startsWith('http://') || photoUrl.startsWith('https://')) {
+      return photoUrl;
+    }
+    if (photoUrl.startsWith('/static/')) {
+      return photoUrl;
+    }
+    return `/static/${photoUrl}`;
+  };
+
+  const photoUrl = resolvePhotoUrl(product.photo_url);
 
   // Сбрасываем состояние загрузки при изменении товара
   useEffect(() => {

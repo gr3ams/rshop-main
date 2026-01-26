@@ -20,9 +20,18 @@ export const ProductCard = ({
   onUpdateQuantity,
   onProductClick,
 }: ProductCardProps) => {
-  const photoUrl = product.photo_url
-    ? `/static/${product.photo_url}`
-    : IMAGES.placeholder;
+  const resolvePhotoUrl = (photoUrl?: string) => {
+    if (!photoUrl) return IMAGES.placeholder;
+    if (photoUrl.startsWith('http://') || photoUrl.startsWith('https://')) {
+      return photoUrl;
+    }
+    if (photoUrl.startsWith('/static/')) {
+      return photoUrl;
+    }
+    return `/static/${photoUrl}`;
+  };
+
+  const photoUrl = resolvePhotoUrl(product.photo_url);
 
   return (
     <Card

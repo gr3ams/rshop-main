@@ -88,7 +88,8 @@ async def view_products(callback: CallbackQuery, state: FSMContext):
                 items_per_page=PAGINATION_PRODUCTS_PER_PAGE,
                 current_page=current_page,
                 menu_callback="products_menu",
-                parse_mode="HTML"
+                parse_mode="HTML",
+                page_prefix="page_products"
             )
             await state.update_data(products_page=current_page)
             logger.info(f"Список товаров отображен: user_id={user_id}, total={len(products)}, page={current_page}")
@@ -774,4 +775,3 @@ async def cancel_product_delete(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer("❌ Удаление товара отменено")
     await admin_panel(callback.message)
     await callback.answer()
-

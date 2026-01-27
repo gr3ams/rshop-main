@@ -244,7 +244,7 @@ export const Shop = () => {
       <div className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
         <div className="flex items-center justify-between px-4 py-3 gap-3">
           <div className="flex flex-col">
-            <span className="text-xs text-muted-foreground uppercase tracking-[0.08em]">R.ShopBot</span>
+            <span className="text-xs text-muted-foreground uppercase tracking-[0.08em]">R.SHOP BOT</span>
             <h1 className="text-xl font-bold">{getPageTitle()}</h1>
           </div>
           <div className="flex items-center gap-2">

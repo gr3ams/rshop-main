@@ -332,8 +332,8 @@ async def create_order(order: OrderCreate, db: AsyncSession = Depends(get_db)):
             logger.warning(f"Invalid total: {order.total}")
             raise HTTPException(status_code=400, detail="Order total must be greater than 0")
         
-        # Генерируем короткий уникальный ID заказа: ORD-ДДММ-ХХХ
-        # Где ДДММ - день и месяц, ХХХ - последние 3 цифры user_id
+        # Генерируем уникальный ID заказа: ORD-ДДММ-ХХ-YYY
+        # Где ДДММ - день и месяц, ХХ - номер заказа за день, YYY - последние 3 цифры user_id
         now = datetime.now()
         date_str = now.strftime('%d%m')
         
@@ -341,14 +341,22 @@ async def create_order(order: OrderCreate, db: AsyncSession = Depends(get_db)):
         today_start = datetime(now.year, now.month, now.day)
         orders_today_result = await db.execute(
             select(func.count(Order.id)).where(
-                Order.user_id == order.user_id,
                 Order.created_at >= today_start
             )
         )
         orders_today = orders_today_result.scalar() or 0
-        
-        order_num = str(orders_today + 1).zfill(2)  # Порядковый номер заказа сегодня (01, 02, ...)
-        order_id = f"ORD-{date_str}-{order_num}"
+
+        user_suffix = str(order.user_id)[-3:].zfill(3)
+        attempt = 0
+        order_id = ""
+
+        while True:
+            order_num = str(orders_today + 1 + attempt).zfill(2)
+            order_id = f"ORD-{date_str}-{order_num}-{user_suffix}"
+            existing = await db.execute(select(Order.id).where(Order.order_id == order_id))
+            if not existing.scalar_one_or_none():
+                break
+            attempt += 1
         
         logger.info(f"Creating order: {order_id} for user {order.user_name} (id: {order.user_id})")
         logger.info(f"Order details: {len(order.items)} items, total: {order.total}")

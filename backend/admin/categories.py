@@ -90,7 +90,8 @@ async def view_categories(callback: CallbackQuery, state: FSMContext):
                 items_per_page=PAGINATION_CATEGORIES_PER_PAGE,
                 current_page=current_page,
                 menu_callback="categories_menu",
-                parse_mode="HTML"
+                parse_mode="HTML",
+                page_prefix="page_categories"
             )
             await state.update_data(categories_page=current_page)
             logger.info(f"Список категорий отображен: user_id={user_id}, total={len(categories)}, page={current_page}")
@@ -185,7 +186,7 @@ async def find_category_to_edit(message: Message, state: FSMContext):
     try:
         async with AsyncSessionLocal() as session:
             result = await session.execute(
-                select(Category).where(func.lower(Category.name) == search_text)
+                select(Category).where(func.lower(func.trim(Category.name)) == search_text)
             )
             category = result.scalar_one_or_none()
 
@@ -316,9 +317,21 @@ async def find_category_to_delete(message: Message, state: FSMContext):
     try:
         async with AsyncSessionLocal() as session:
             result = await session.execute(
-                select(Category).where(func.lower(Category.name) == search_text)
+                select(Category).where(func.lower(func.trim(Category.name)) == search_text)
             )
             category = result.scalar_one_or_none()
+
+            if not category:
+                categories = await get_categories(session)
+
+                def normalize(value: str) -> str:
+                    return " ".join(value.replace("\u00a0", " ").split()).lower()
+
+                normalized_search = normalize(search_text)
+                category = next(
+                    (item for item in categories if normalize(item.name) == normalized_search),
+                    None,
+                )
 
             if not category:
                 logger.warning(f"Категория не найдена для удаления: user_id={user_id}, search={search_text}")
@@ -423,4 +436,3 @@ async def cancel_category_delete(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer("❌ Удаление категории отменено")
     await admin_panel(callback.message)
     await callback.answer()
-

@@ -55,7 +55,7 @@ export const CheckoutForm = ({ onBack, onSuccess }: CheckoutFormProps) => {
   const [phoneError, setPhoneError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: '',
-    phone: '',
+    phone: '+7 ',
     address: '',
     comment: '',
   });
@@ -67,6 +67,10 @@ export const CheckoutForm = ({ onBack, onSuccess }: CheckoutFormProps) => {
     
     // Разрешаем ввод только цифр, +, -, (, ), пробелов
     value = value.replace(/[^\d+\-() ]/g, '');
+
+    if (!value.startsWith('+7')) {
+      value = `+7 ${value.replace(/^\+?7?\s*/, '')}`.trimEnd();
+    }
     
     setFormData({
       ...formData,

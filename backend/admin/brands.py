@@ -1,4 +1,3 @@
-﻿
 """
 Управление брендами в админ-панели
 """
@@ -69,25 +68,31 @@ async def view_brands(callback: CallbackQuery, state: FSMContext):
         logger.debug(f"Текущая страница: {current_page}, user_id={user_id}")
 
         async with AsyncSessionLocal() as session:
-            brands = await get_brands(session)
+            result = await session.execute(
+                select(Brand, func.count(Product.id).label("products_count"))
+                .outerjoin(Product, Product.brand_id == Brand.id)
+                .group_by(Brand.id)
+                .order_by(Brand.name)
+            )
+            brand_rows = result.all()
 
-            def format_brand(brand: Brand, idx: int) -> str:
-                # Подсчитываем количество товаров
-                products_count = len(brand.products) if hasattr(brand, 'products') else 0
-                return f"{idx}. <b>{brand.name}</b> (ID: {brand.id}, товаров: {products_count})"
+            def format_brand(row: tuple[Brand, int], idx: int) -> str:
+                brand, products_count = row
+                return f"{idx}. <b>{brand.name}</b> (ID: {brand.id}, товаров: {products_count or 0})"
 
             await send_paginated_message(
                 callback=callback,
-                items=brands,
+                items=brand_rows,
                 title="🏷️ <b>Список брендов:</b>",
                 item_format=format_brand,
                 items_per_page=PAGINATION_BRANDS_PER_PAGE,
                 current_page=current_page,
                 menu_callback="brands_menu",
-                parse_mode="HTML"
+                parse_mode="HTML",
+                page_prefix="page_brands"
             )
             await state.update_data(brands_page=current_page)
-            logger.info(f"Список брендов отображен: user_id={user_id}, total={len(brands)}, page={current_page}")
+            logger.info(f"Список брендов отображен: user_id={user_id}, total={len(brand_rows)}, page={current_page}")
     except Exception as e:
         logger.error(f"Ошибка при получении брендов: user_id={user_id}, error={str(e)}", exc_info=True)
         await callback.message.answer("❌ Ошибка при загрузке списка брендов")
@@ -398,4 +403,3 @@ async def cancel_brand_delete(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer("❌ Удаление бренда отменено")
     await admin_panel(callback.message)
     await callback.answer()
-

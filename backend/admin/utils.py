@@ -133,7 +133,8 @@ async def send_paginated_message(
     current_page: int = 0,
     back_callback: str = "admin_back",
     menu_callback: str = None,
-    parse_mode: str = "HTML"
+    parse_mode: str = "HTML",
+    page_prefix: str = "page"
 ):
     """Отправка сообщения с пагинацией"""
     logger.debug(f"Отправка пагинированного сообщения: title={title}, items={len(items)}, page={current_page}")
@@ -162,9 +163,9 @@ async def send_paginated_message(
     builder = InlineKeyboardBuilder()
 
     if current_page > 0:
-        builder.button(text="⬅️ Назад", callback_data=f"page_{current_page - 1}")
+        builder.button(text="⬅️ Назад", callback_data=f"{page_prefix}_{current_page - 1}")
     if current_page < total_pages - 1:
-        builder.button(text="Вперёд ➡️", callback_data=f"page_{current_page + 1}")
+        builder.button(text="Вперёд ➡️", callback_data=f"{page_prefix}_{current_page + 1}")
 
     if menu_callback:
         builder.button(text="🔙 В меню", callback_data=menu_callback)
@@ -223,4 +224,3 @@ async def get_products_with_details(session: AsyncSession) -> List[Product]:
     products = result.unique().scalars().all()
     logger.debug(f"Получено товаров: {len(products)}")
     return products
-

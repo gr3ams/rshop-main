@@ -1,4 +1,3 @@
-﻿
 import { Product } from '@/types/shop.types';
 import { useCart } from '@/hooks/useCart';
 import { Dialog, DialogContent, DialogClose } from '@/components/ui/dialog';
@@ -32,9 +31,18 @@ export const ProductModal = ({ product, onClose }: ProductModalProps) => {
   const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
 
-  const photoUrl = product.photo_url
-    ? `/static/${product.photo_url}`
-    : IMAGES.placeholder;
+  const resolvePhotoUrl = (photoUrl?: string) => {
+    if (!photoUrl) return IMAGES.placeholder;
+    if (photoUrl.startsWith('http://') || photoUrl.startsWith('https://')) {
+      return photoUrl;
+    }
+    if (photoUrl.startsWith('/static/')) {
+      return photoUrl;
+    }
+    return `/static/${photoUrl}`;
+  };
+
+  const photoUrl = resolvePhotoUrl(product.photo_url);
 
   // Сбрасываем состояние загрузки при изменении товара
   useEffect(() => {
@@ -87,23 +95,19 @@ export const ProductModal = ({ product, onClose }: ProductModalProps) => {
   return (
     <>
       <Dialog open={true} onOpenChange={onClose}>
-        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto p-5">
-          <DialogClose className="absolute top-4 right-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100">
-            <X className="h-4 w-4" />
+        <DialogContent hideClose className="max-w-md max-h-[92vh] overflow-y-auto p-4 pt-16 rounded-3xl">
+          <DialogClose className="absolute right-4 top-4 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-border/60 bg-background/95 text-foreground shadow-lg backdrop-blur transition hover:bg-muted active:scale-95">
+            <X className="h-6 w-6" />
             <span className="sr-only">Close</span>
           </DialogClose>
 
           <div
-            className="w-full flex items-center justify-center overflow-hidden rounded-lg cursor-zoom-in mb-5 relative bg-muted"
-            style={{
-              minHeight: imageDimensions 
-                ? `${Math.min(400, (imageDimensions.height / imageDimensions.width) * 100)}px`
-                : '250px',
-              aspectRatio: imageDimensions 
-                ? `${imageDimensions.width} / ${imageDimensions.height}`
-                : '4 / 3'
-            }}
+            className="w-full aspect-[3/4] flex items-center justify-center overflow-hidden rounded-3xl cursor-zoom-in mb-5 relative bg-white"
             onClick={() => setShowZoom(true)}
+            onDoubleClick={(e) => {
+              e.stopPropagation();
+              setShowZoom(true);
+            }}
           >
             {/* Skeleton placeholder пока изображение загружается */}
             {!imageLoaded && (
@@ -113,13 +117,9 @@ export const ProductModal = ({ product, onClose }: ProductModalProps) => {
             <img
               src={photoUrl}
               alt={product.name}
-              className={`w-full h-full max-w-full max-h-[400px] object-contain rounded-lg transition-opacity duration-300 ${
+              className={`w-full h-full object-contain rounded-3xl transition-opacity duration-300 ${
                 imageLoaded ? 'opacity-100' : 'opacity-0'
               }`}
-              style={{ 
-                maxHeight: '400px',
-                objectFit: 'contain'
-              }}
               onLoad={() => setImageLoaded(true)}
               onError={(e) => {
                 e.currentTarget.src = IMAGES.placeholder;
@@ -140,6 +140,11 @@ export const ProductModal = ({ product, onClose }: ProductModalProps) => {
             {product.description || 'Описание отсутствует'}
           </div>
 
+          <div className="text-xs text-muted-foreground mb-3 flex items-center gap-2">
+            <ZoomIn className="h-4 w-4" />
+            Двойное нажатие увеличивает фото
+          </div>
+
           <div className="flex flex-col gap-3">
             {cartItem ? (
               <>
@@ -147,6 +152,12 @@ export const ProductModal = ({ product, onClose }: ProductModalProps) => {
                   <button
                     className="bg-muted hover:bg-muted/80 w-10 h-10 flex items-center justify-center"
                     onClick={() => handleUpdateQuantity(cartItem.quantity - 1)}
+                    onPointerDown={(e) => {
+                      if (e.pointerType === 'touch') {
+                        e.preventDefault();
+                        handleUpdateQuantity(cartItem.quantity - 1);
+                      }
+                    }}
                   >
                     <Minus className="h-4 w-4" />
                   </button>
@@ -156,6 +167,12 @@ export const ProductModal = ({ product, onClose }: ProductModalProps) => {
                   <button
                     className="bg-muted hover:bg-muted/80 w-10 h-10 flex items-center justify-center"
                     onClick={() => handleUpdateQuantity(cartItem.quantity + 1)}
+                    onPointerDown={(e) => {
+                      if (e.pointerType === 'touch') {
+                        e.preventDefault();
+                        handleUpdateQuantity(cartItem.quantity + 1);
+                      }
+                    }}
                   >
                     <Plus className="h-4 w-4" />
                   </button>
@@ -181,19 +198,31 @@ export const ProductModal = ({ product, onClose }: ProductModalProps) => {
 
       {showZoom && (
         <div
-          className="fixed inset-0 bg-black/95 flex items-center justify-center z-[100] p-5"
+          className="fixed inset-0 bg-black/95 flex items-center justify-center z-[100] p-4"
           onClick={() => setShowZoom(false)}
         >
           <button
-            className="absolute top-5 right-5 text-white bg-black/50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-black/70"
-            onClick={() => setShowZoom(false)}
+            type="button"
+            aria-label="Закрыть фото"
+            className="fixed right-4 top-[calc(env(safe-area-inset-top,0px)+1rem)] z-[110] flex h-14 w-14 items-center justify-center rounded-full bg-black/70 text-white shadow-xl backdrop-blur transition hover:bg-black/80 active:scale-95"
+            onPointerDown={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setShowZoom(false);
+            }}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setShowZoom(false);
+            }}
           >
-            <X className="h-6 w-6" />
+            <X className="h-8 w-8" />
           </button>
           <img
             src={photoUrl}
             alt={product.name}
-            className="max-w-full max-h-[80vh] object-contain rounded-lg"
+            className="max-w-full max-h-[86vh] object-contain rounded-3xl"
+            onClick={(e) => e.stopPropagation()}
             onError={(e) => {
               e.currentTarget.src = IMAGES.placeholder;
             }}

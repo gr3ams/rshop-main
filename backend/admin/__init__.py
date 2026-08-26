@@ -43,30 +43,32 @@ async def handle_pagination(callback: CallbackQuery, state: FSMContext):
     """Обработка пагинации"""
     user_id = callback.from_user.id if callback.from_user else None
     try:
-        page = int(callback.data.split("_")[1])
-        message_text = callback.message.text or ""
+        parts = callback.data.split("_")
+        if len(parts) < 3:
+            await callback.answer("Неизвестный контекст пагинации")
+            return
 
-        logger.debug(f"Обработка пагинации: user_id={user_id}, page={page}, context={message_text[:50]}")
+        context = parts[1]
+        page = int(parts[2])
 
-        # Импортируем функции просмотра из модулей
+        logger.debug(f"Обработка пагинации: user_id={user_id}, page={page}, context={context}")
+
         from .brands import view_brands
         from .categories import view_categories
         from .products import view_products
 
-        # Определяем контекст по тексту сообщения
-        if "товар" in message_text.lower():
+        if context == "products":
             await state.update_data(products_page=page)
             await view_products(callback, state)
-        elif "бренд" in message_text.lower():
+        elif context == "brands":
             await state.update_data(brands_page=page)
             await view_brands(callback, state)
-        elif "категори" in message_text.lower():
+        elif context == "categories":
             await state.update_data(categories_page=page)
             await view_categories(callback, state)
         else:
-            logger.warning(f"Неизвестный контекст пагинации: user_id={user_id}, message_text={message_text[:50]}")
+            logger.warning(f"Неизвестный контекст пагинации: user_id={user_id}, context={context}")
             await callback.answer("Неизвестный контекст пагинации")
     except Exception as e:
         logger.error(f"Ошибка обработки пагинации: user_id={user_id}, error={str(e)}", exc_info=True)
         await callback.answer("❌ Ошибка при переключении страницы")
-

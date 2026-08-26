@@ -37,10 +37,19 @@ export const ProductsList = ({ products, categoryName }: ProductsListProps) => {
     return <EmptyState icon={PackageOpen} message="Товаров в этой категории пока нет" />;
   }
 
+  const resolvePhotoUrl = (photoUrl?: string) => {
+    if (!photoUrl) return IMAGES.placeholder;
+    if (photoUrl.startsWith('http://') || photoUrl.startsWith('https://')) {
+      return photoUrl;
+    }
+    if (photoUrl.startsWith('/static/')) {
+      return photoUrl;
+    }
+    return `/static/${photoUrl}`;
+  };
+
   const handleAddToCart = (product: Product) => {
-    const photoUrl = product.photo_url
-      ? `/static/${product.photo_url}`
-      : IMAGES.placeholder;
+    const photoUrl = resolvePhotoUrl(product.photo_url);
 
     addToCart({
       id: product.id,

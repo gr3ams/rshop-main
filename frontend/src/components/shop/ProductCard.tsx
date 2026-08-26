@@ -1,4 +1,3 @@
-﻿
 import { Product, CartItem } from '@/types/shop.types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -20,19 +19,29 @@ export const ProductCard = ({
   onUpdateQuantity,
   onProductClick,
 }: ProductCardProps) => {
-  const photoUrl = product.photo_url
-    ? `/static/${product.photo_url}`
-    : IMAGES.placeholder;
+  const resolvePhotoUrl = (photoUrl?: string) => {
+    if (!photoUrl) return IMAGES.placeholder;
+    if (photoUrl.startsWith('http://') || photoUrl.startsWith('https://')) {
+      return photoUrl;
+    }
+    if (photoUrl.startsWith('/static/')) {
+      return photoUrl;
+    }
+    return `/static/${photoUrl}`;
+  };
+
+  const photoUrl = resolvePhotoUrl(product.photo_url);
 
   return (
     <Card
       className="cursor-pointer transition-all hover:-translate-y-1 hover:shadow-lg overflow-hidden"
       onClick={onProductClick}
+      onDoubleClick={(e) => {
+        e.preventDefault();
+        onProductClick();
+      }}
     >
-      <div 
-        className="relative w-full overflow-hidden product-image-container"
-        style={{ minHeight: '200px' }}
-      >
+      <div className="relative w-full aspect-[3/4] overflow-hidden product-image-container active:scale-[0.99] transition bg-white">
         {/* Template.jpg как фон - не влияет на высоту */}
         <div className="absolute inset-0 product-image-container-bg" />
         
@@ -40,8 +49,7 @@ export const ProductCard = ({
         <img
           src={photoUrl}
           alt={product.name}
-          className="relative w-full h-auto object-cover transition-transform"
-          style={{ display: 'block' }}
+          className="relative h-full w-full object-cover transition-transform"
           onError={(e) => {
             e.currentTarget.src = IMAGES.placeholder;
           }}
@@ -61,7 +69,7 @@ export const ProductCard = ({
           {cartItem ? (
             <div className="flex items-center border border-border rounded-full overflow-hidden">
               <button
-                className="bg-muted hover:bg-muted/80 w-8 h-8 flex items-center justify-center font-semibold"
+                className="bg-muted hover:bg-muted/80 active:scale-95 w-8 h-8 flex items-center justify-center font-semibold transition"
                 onClick={() => onUpdateQuantity(cartItem.quantity - 1)}
               >
                 <Minus className="h-4 w-4" />
@@ -70,7 +78,7 @@ export const ProductCard = ({
                 {cartItem.quantity}
               </span>
               <button
-                className="bg-muted hover:bg-muted/80 w-8 h-8 flex items-center justify-center font-semibold"
+                className="bg-muted hover:bg-muted/80 active:scale-95 w-8 h-8 flex items-center justify-center font-semibold transition"
                 onClick={() => onUpdateQuantity(cartItem.quantity + 1)}
               >
                 <Plus className="h-4 w-4" />
@@ -78,7 +86,7 @@ export const ProductCard = ({
             </div>
           ) : (
             <Button
-              className="w-full gap-2"
+              className="w-full gap-2 active:scale-[0.98] transition"
               size="sm"
               onClick={onAddToCart}
             >

@@ -1,4 +1,3 @@
-﻿
 import { Product, CartItem } from '@/types/shop.types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -42,10 +41,7 @@ export const ProductCard = ({
         onProductClick();
       }}
     >
-      <div 
-        className="relative w-full overflow-hidden product-image-container active:scale-[0.99] transition"
-        style={{ minHeight: '200px' }}
-      >
+      <div className="relative w-full aspect-[3/4] overflow-hidden product-image-container active:scale-[0.99] transition bg-white">
         {/* Template.jpg как фон - не влияет на высоту */}
         <div className="absolute inset-0 product-image-container-bg" />
         
@@ -53,8 +49,7 @@ export const ProductCard = ({
         <img
           src={photoUrl}
           alt={product.name}
-          className="relative w-full h-auto object-cover transition-transform"
-          style={{ display: 'block' }}
+          className="relative h-full w-full object-cover transition-transform"
           onError={(e) => {
             e.currentTarget.src = IMAGES.placeholder;
           }}

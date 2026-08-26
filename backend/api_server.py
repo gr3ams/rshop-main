@@ -1,4 +1,3 @@
-﻿
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -554,12 +553,16 @@ async def get_user_orders(user_id: int, db: AsyncSession = Depends(get_db)):
 async def get_user_stats(user_id: int, db: AsyncSession = Depends(get_db)):
     """Получить статистику пользователя (количество заказов, общая сумма)"""
     try:
-        # Получаем количество заказов и общую сумму
+        # Считаем статистику только по подтвержденным заказам.
+        # Отклоненные и ожидающие заказы не должны попадать в "Потрачено".
         result = await db.execute(
             select(
                 func.count(Order.id).label('orders_count'),
                 func.coalesce(func.sum(Order.total), 0).label('total_spent')
-            ).where(Order.user_id == user_id)
+            ).where(
+                Order.user_id == user_id,
+                Order.status == OrderStatus.CONFIRMED.value
+            )
         )
         stats = result.first()
         

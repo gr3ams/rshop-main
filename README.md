@@ -814,33 +814,34 @@ python backend/init_db.py
 ## 📝 Лицензия
 
 [
-# MIT License
 
-Copyright (c) 2026 RSHOP
+# Ownership Notice
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+This project was transferred to the current maintainer as a private donation. Unless otherwise agreed in writing, all intellectual property rights remain with the original copyright holder, while maintenance and operation rights belong to the current maintainer.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+# License
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-]
+Copyright (c) 2026 greams
 
+This project is private and proprietary software.
+
+Permission is granted to the recipient of this project to use and modify the software solely for the intended purpose of operating and maintaining this project.
+
+The following actions are prohibited without explicit written permission from the copyright holder:
+
+- Redistribution of this software or any part of it.
+- Selling, sublicensing, or transferring this software to third parties.
+- Publishing the source code or making it publicly available.
+- Using this software as the basis for another commercial or private project.
+- Removing copyright notices or license information.
+
+This software is provided "as is", without warranty of any kind, express or implied. The copyright holder shall not be liable for any damages or issues arising from the use of this software.
+
+All rights reserved.
 ---
 
 ## 👥 Авторы
 
-[made by greams 2026]
+[Made by greams, All rights reserved 2025-2026]
 
 ---

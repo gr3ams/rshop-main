@@ -813,7 +813,6 @@ python backend/init_db.py
 
 ## 📝 Лицензия
 
-[
 
 # Ownership Notice
 
@@ -838,6 +837,7 @@ The following actions are prohibited without explicit written permission from th
 This software is provided "as is", without warranty of any kind, express or implied. The copyright holder shall not be liable for any damages or issues arising from the use of this software.
 
 All rights reserved.
+
 ---
 
 ## 👥 Авторы

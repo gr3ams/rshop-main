@@ -811,14 +811,14 @@ python backend/init_db.py
 
 ---
 
-## 📝 Лицензия
+# 📝 Лицензия
 
 
-# Ownership Notice
+## Ownership Notice
 
 This project was transferred to the current maintainer as a private donation. Unless otherwise agreed in writing, all intellectual property rights remain with the original copyright holder, while maintenance and operation rights belong to the current maintainer.
 
-# License
+## License
 
 Copyright (c) 2026 greams
 
@@ -840,8 +840,6 @@ All rights reserved.
 
 ---
 
-## 👥 Авторы
-
-[Made by greams, All rights reserved 2025-2026]
+Made by greams, All rights reserved 2025-2026.
 
 ---
